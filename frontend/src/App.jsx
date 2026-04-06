@@ -1,46 +1,55 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-// Dummy Pages
-const Home = () => (
-  <div>
-    <h2>Home Page</h2>
-    <p>Welcome to the Elderly Care Support Platform.</p>
-  </div>
-);
+import HomePage        from './pages/HomePage';
+import LoginPage       from './pages/LoginPage';
+import SignupPage      from './pages/SignupPage';
+import DashboardPage   from './pages/DashboardPage';
+import MedicinePage    from './pages/MedicinePage';
+import TelemedicinePage from './pages/TelemedicinePage';
+import ActivityPage    from './pages/ActivityPage';
+import DocumentsPage   from './pages/DocumentsPage';
+import EntertainmentPage from './pages/EntertainmentPage';
+import ContactsPage    from './pages/ContactsPage';
 
-const Login = () => (
-  <div>
-    <h2>Login Page</h2>
-    <p>Please enter your credentials.</p>
-  </div>
-);
+import Layout          from './components/Layout';
+import SOSButton       from './components/SOSButton';
+import VoiceAssistant  from './components/VoiceAssistant';
 
-const Dashboard = () => (
-  <div>
-    <h2>Dashboard</h2>
-    <p>Your health metrics and alerts.</p>
-  </div>
-);
+export const AuthContext = React.createContext(null);
 
-function App() {
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [voiceOpen, setVoiceOpen] = useState(false);
+
+  const login  = (u) => setUser(u);
+  const logout = ()  => setUser(null);
+
   return (
-    <Router>
-      <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-        <nav style={{ marginBottom: '20px' }}>
-          <Link to="/" style={{ marginRight: '15px' }}>Home</Link>
-          <Link to="/login" style={{ marginRight: '15px' }}>Login</Link>
-          <Link to="/dashboard">Dashboard</Link>
-        </nav>
-        <hr />
-        
+    <AuthContext.Provider value={{ user, login, logout }}>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Public */}
+          <Route path="/"       element={<HomePage />} />
+          <Route path="/login"  element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+
+          {/* Protected — wrapped in Layout */}
+          <Route element={<Layout onVoice={() => setVoiceOpen(true)} />}>
+            <Route path="/dashboard"    element={user ? <DashboardPage />    : <Navigate to="/login" />} />
+            <Route path="/medicine"     element={user ? <MedicinePage />     : <Navigate to="/login" />} />
+            <Route path="/telemedicine" element={user ? <TelemedicinePage /> : <Navigate to="/login" />} />
+            <Route path="/activity"     element={user ? <ActivityPage />     : <Navigate to="/login" />} />
+            <Route path="/documents"    element={user ? <DocumentsPage />    : <Navigate to="/login" />} />
+            <Route path="/entertainment"element={user ? <EntertainmentPage />: <Navigate to="/login" />} />
+            <Route path="/contacts"     element={user ? <ContactsPage />     : <Navigate to="/login" />} />
+          </Route>
         </Routes>
-      </div>
-    </Router>
+
+        {/* Global always-visible elements */}
+        {user && <SOSButton />}
+        {user && <VoiceAssistant open={voiceOpen} onClose={() => setVoiceOpen(false)} />}
+      </BrowserRouter>
+    </AuthContext.Provider>
   );
 }
-
-export default App;
