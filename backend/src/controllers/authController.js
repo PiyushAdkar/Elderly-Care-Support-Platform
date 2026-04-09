@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const { generateToken } = require("../utils/jwt");
 const { sendSuccess, sendError } = require("../utils/apiResponse");
-const { createError } = require("../middleware/errorHandler");
+const { createError } = require("../utils/errorHandler");
 
 // ─── Signup ───────────────────────────────────────────────────────────────────
 const signup = async (req, res, next) => {

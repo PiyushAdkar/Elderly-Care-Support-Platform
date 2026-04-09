@@ -1,9 +1,9 @@
 require("dotenv").config();
 const fs = require("fs");
 
-const app = require("./app");
-const connectDB = require("./config/db");
-const logger = require("./utils/logger");
+const app = require("./app.js");
+const connectDB = require("./config/db.js");
+const logger = require("./utils/logger.js");
 
 // ── Ensure required directories exist ─────────────────────────────────────────
 ["logs", process.env.UPLOAD_DIR || "uploads"].forEach((dir) => {
@@ -13,7 +13,11 @@ const logger = require("./utils/logger");
 const PORT = parseInt(process.env.PORT || "5000", 10);
 
 const start = async () => {
-  await connectDB();
+  try {
+    await connectDB();
+  } catch (err) {
+    logger.error(`Database connection failed on startup. Server is running in degraded mode.`);
+  }
 
   const server = app.listen(PORT, () => {
     logger.info(`──────────────────────────────────────────────`);
@@ -27,10 +31,14 @@ const start = async () => {
   // ── Graceful shutdown ──────────────────────────────────────────────────────
   const shutdown = (signal) => {
     logger.warn(`${signal} received. Shutting down gracefully...`);
-    server.close(() => {
-      logger.info("HTTP server closed.");
+    if (server) {
+      server.close(() => {
+        logger.info("HTTP server closed.");
+        process.exit(0);
+      });
+    } else {
       process.exit(0);
-    });
+    }
     // Force kill after 10 s
     setTimeout(() => {
       logger.error("Forced shutdown after timeout.");

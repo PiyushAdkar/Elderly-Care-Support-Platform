@@ -12,7 +12,7 @@ const {
 } = require("../controllers/documentController");
 const { protect } = require("../middleware/auth");
 const validate = require("../middleware/validate");
-const upload = require("../utils/upload");
+const upload = require("../middleware/upload");
 
 router.use(protect);
 

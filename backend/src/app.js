@@ -7,7 +7,7 @@ const path = require("path");
 require("dotenv").config();
 
 const logger = require("./utils/logger");
-const { errorHandler } = require("./middleware/errorHandler");
+const { errorHandler } = require("./utils/errorHandler");
 const { sendError } = require("./utils/apiResponse");
 
 // ── Route imports ─────────────────────────────────────────────────────────────
@@ -77,7 +77,7 @@ const uploadDir = process.env.UPLOAD_DIR || "uploads";
 app.use("/uploads", express.static(path.resolve(uploadDir)));
 
 // ── Health check ──────────────────────────────────────────────────────────────
-app.get("/health", (_req, res) => {
+app.get("/api/health", (_req, res) => {
   res.status(200).json({
     success: true,
     message: "Elder Companion API is running.",
