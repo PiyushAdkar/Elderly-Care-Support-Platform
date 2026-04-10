@@ -19,7 +19,7 @@ export default function SOSButton() {
                    bg-sos-500 hover:bg-sos-600 text-white
                    w-20 h-20 rounded-full shadow-2xl
                    flex flex-col items-center justify-center gap-0.5
-                   animate-pulse-sos font-black text-sm uppercase
+                   animate-pulse font-black text-sm uppercase
                    transition-transform hover:scale-110 active:scale-95
                    focus:outline-none focus:ring-4 focus:ring-red-300"
         title="Emergency SOS"

@@ -2,9 +2,9 @@ import React from 'react';
 
 // ── Card ──────────────────────────────────────────────
 export function Card({ children, className = '', onClick }) {
-  const base = `bg-white rounded-3xl shadow-card p-6 ${className}`;
+  const base = `bg-white rounded-3xl shadow-lg p-6 ${className}`;
   if (onClick)
-    return <div className={`${base} cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 transition-all`} onClick={onClick}>{children}</div>;
+    return <div className={`${base} cursor-pointer hover:shadow-xl hover:-translate-y-0.5 transition-all`} onClick={onClick}>{children}</div>;
   return <div className={base}>{children}</div>;
 }
 
@@ -26,8 +26,8 @@ export function ActionBtn({ icon, label, onClick, color = 'bg-primary-50 hover:b
     <button onClick={onClick}
       className={`${color} ${textColor} flex flex-col items-center justify-center gap-2
                   rounded-3xl p-5 font-bold text-sm cursor-pointer
-                  transition-all hover:scale-105 active:scale-95 shadow-card
-                  hover:shadow-card-hover border border-white/80`}>
+                  transition-all hover:scale-105 active:scale-95 shadow-lg
+                  hover:shadow-xl border border-white/80`}>
       <span className="text-4xl">{icon}</span>
       {label}
     </button>

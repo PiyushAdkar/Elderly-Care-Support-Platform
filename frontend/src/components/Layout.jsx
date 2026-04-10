@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../App';
+import { AuthContext } from '../context/AuthContext';
 import {
   LayoutDashboard, Pill, Video, Activity,
   FolderOpen, Music, Users, Mic, LogOut, Menu, X
@@ -24,87 +24,90 @@ export default function Layout({ onVoice }) {
   const handleLogout = () => { logout(); navigate('/'); };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f0f6ff]">
+    <div className="min-h-screen flex flex-col bg-slate-50">
       {/* ── Top Bar ── */}
-      <header className="bg-white shadow-sm sticky top-0 z-40 border-b border-primary-100">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🌿</span>
-            <span className="text-xl font-black text-primary-700 hidden sm:block">ElderCare AI</span>
+      <nav className="w-full bg-[#0B1C3F] sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
+          <div className="flex items-center justify-between h-16">
+          {/* Left Section (Logo) */}
+          <div className="flex items-center flex-shrink-0">
+            <div className="text-xl font-bold text-white flex items-center gap-2 whitespace-nowrap">
+              <span className="text-2xl">🌿</span>
+              <span className="hidden sm:block">ElderCare AI</span>
+            </div>
           </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          {/* Center Section (Navigation Links) */}
+          <div className="hidden md:flex items-center md:gap-2 lg:gap-4 overflow-x-auto flex-nowrap scrollbar-hide mx-4">
             {navItems.map(({ to, icon: Icon, label }) => (
               <NavLink
                 key={to} to={to}
                 className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-bold transition-all
-                   ${isActive
-                     ? 'bg-primary-600 text-white shadow-md'
-                     : 'text-primary-600 hover:bg-primary-50'}`
+                  `flex items-center gap-2 transition-colors flex-shrink-0 whitespace-nowrap text-sm ${
+                    isActive
+                      ? 'bg-white/15 text-white px-3 py-2 rounded-lg font-semibold'
+                      : 'text-blue-100 hover:text-white px-3 py-2 font-medium'
+                  }`
                 }
               >
                 <Icon size={18} /> {label}
               </NavLink>
             ))}
-          </nav>
+          </div>
 
-          {/* Right Actions */}
-          <div className="flex items-center gap-2">
-            {/* Voice */}
+          {/* Right Section (User Profile & Actions) */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            {/* Voice Assistant */}
             <button
               onClick={onVoice}
-              className="flex items-center gap-1.5 bg-primary-50 hover:bg-primary-100
-                         text-primary-700 font-bold px-4 py-2 rounded-2xl text-sm
-                         border-2 border-primary-200 transition-all"
+              className="flex items-center gap-2 text-white hover:text-blue-200 font-medium transition-colors"
               title="Voice Assistant"
             >
-              <Mic size={18} />
-              <span className="hidden sm:block">Voice</span>
+              <Mic size={20} />
+              <span className="hidden lg:block">Voice</span>
             </button>
 
-            {/* Greeting */}
-            <span className="hidden md:block text-sm font-bold text-primary-700 bg-primary-50
-                             px-4 py-2 rounded-2xl border border-primary-100">
-              👋 {user?.name || 'Ramesh'}
-            </span>
+            {/* User Badge */}
+            <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-[#0B1C3F] bg-white px-3 py-1.5 rounded-lg border border-transparent">
+              👋 <span>{user?.name || 'Ramesh'}</span>
+            </div>
 
             {/* Logout */}
             <button onClick={handleLogout}
-              className="p-2 rounded-2xl text-primary-400 hover:bg-red-50 hover:text-red-500
-                         transition-all" title="Logout">
-              <LogOut size={20} />
+              className="flex items-center gap-2 border border-white/20 text-white hover:bg-white/10 px-3 py-1.5 rounded-lg transition-colors font-medium" 
+              title="Logout"
+            >
+              <LogOut size={16} />
+              <span className="hidden sm:block">Logout</span>
             </button>
 
             {/* Mobile Menu Toggle */}
             <button onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden p-2 rounded-2xl text-primary-600 hover:bg-primary-50 transition-all">
+              className="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors">
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-        </div>
-
-        {/* Mobile Dropdown Menu */}
-        {menuOpen && (
-          <div className="lg:hidden bg-white border-t border-primary-100 py-3 px-4
-                          grid grid-cols-4 gap-2 animate-slide-up">
-            {navItems.map(({ to, icon: Icon, label }) => (
-              <NavLink
-                key={to} to={to}
-                onClick={() => setMenuOpen(false)}
-                className={({ isActive }) =>
-                  `flex flex-col items-center gap-1 py-3 rounded-2xl text-xs font-bold transition-all
-                   ${isActive ? 'bg-primary-600 text-white' : 'text-primary-600 hover:bg-primary-50'}`
-                }
-              >
-                <Icon size={22} /> {label}
-              </NavLink>
-            ))}
           </div>
-        )}
-      </header>
+        </div>
+      </nav>
+
+      {/* Mobile Dropdown Menu */}
+      {menuOpen && (
+        <div className="md:hidden bg-[#0B1C3F] border-t border-white/10 py-3 px-4 grid grid-cols-4 gap-2 shadow-md animate-slide-up">
+          {navItems.map(({ to, icon: Icon, label }) => (
+            <NavLink
+              key={to} to={to}
+              onClick={() => setMenuOpen(false)}
+              className={({ isActive }) =>
+                `flex flex-col items-center gap-1 py-3 rounded-lg text-xs font-semibold transition-all
+                 ${isActive ? 'bg-white/15 text-white' : 'text-blue-100 hover:bg-white/5'}`
+              }
+            >
+              <Icon size={20} /> {label}
+            </NavLink>
+          ))}
+        </div>
+      )}
 
       {/* ── Page Content ── */}
       <main className="flex-1">

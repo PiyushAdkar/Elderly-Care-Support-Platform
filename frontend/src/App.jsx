@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
+import Navbar          from './components/Navbar';
 import HomePage        from './pages/HomePage';
 import LoginPage       from './pages/LoginPage';
 import SignupPage      from './pages/SignupPage';
@@ -16,40 +17,35 @@ import Layout          from './components/Layout';
 import SOSButton       from './components/SOSButton';
 import VoiceAssistant  from './components/VoiceAssistant';
 
-export const AuthContext = React.createContext(null);
+import { AuthContext } from './context/AuthContext';
 
 export default function App() {
-  const [user, setUser] = useState(null);
   const [voiceOpen, setVoiceOpen] = useState(false);
-
-  const login  = (u) => setUser(u);
-  const logout = ()  => setUser(null);
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      <BrowserRouter>
-        <Routes>
-          {/* Public */}
-          <Route path="/"       element={<HomePage />} />
-          <Route path="/login"  element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+    <BrowserRouter>
+      <Routes>
+        {/* Public */}
+        <Route path="/"       element={<><Navbar /><HomePage /></>} />
+        <Route path="/login"  element={<><Navbar /><LoginPage /></>} />
+        <Route path="/signup" element={<><Navbar /><SignupPage /></>} />
 
-          {/* Protected — wrapped in Layout */}
-          <Route element={<Layout onVoice={() => setVoiceOpen(true)} />}>
-            <Route path="/dashboard"    element={user ? <DashboardPage />    : <Navigate to="/login" />} />
-            <Route path="/medicine"     element={user ? <MedicinePage />     : <Navigate to="/login" />} />
-            <Route path="/telemedicine" element={user ? <TelemedicinePage /> : <Navigate to="/login" />} />
-            <Route path="/activity"     element={user ? <ActivityPage />     : <Navigate to="/login" />} />
-            <Route path="/documents"    element={user ? <DocumentsPage />    : <Navigate to="/login" />} />
-            <Route path="/entertainment"element={user ? <EntertainmentPage />: <Navigate to="/login" />} />
-            <Route path="/contacts"     element={user ? <ContactsPage />     : <Navigate to="/login" />} />
-          </Route>
-        </Routes>
+        {/* Protected — wrapped in Layout */}
+        <Route element={<Layout onVoice={() => setVoiceOpen(true)} />}>
+          <Route path="/dashboard"    element={isAuthenticated ? <DashboardPage />    : <Navigate to="/login" />} />
+          <Route path="/medicine"     element={isAuthenticated ? <MedicinePage />     : <Navigate to="/login" />} />
+          <Route path="/telemedicine" element={isAuthenticated ? <TelemedicinePage /> : <Navigate to="/login" />} />
+          <Route path="/activity"     element={isAuthenticated ? <ActivityPage />     : <Navigate to="/login" />} />
+          <Route path="/documents"    element={isAuthenticated ? <DocumentsPage />    : <Navigate to="/login" />} />
+          <Route path="/entertainment"element={isAuthenticated ? <EntertainmentPage />: <Navigate to="/login" />} />
+          <Route path="/contacts"     element={isAuthenticated ? <ContactsPage />     : <Navigate to="/login" />} />
+        </Route>
+      </Routes>
 
-        {/* Global always-visible elements */}
-        {user && <SOSButton />}
-        {user && <VoiceAssistant open={voiceOpen} onClose={() => setVoiceOpen(false)} />}
-      </BrowserRouter>
-    </AuthContext.Provider>
+      {/* Global always-visible elements */}
+      {isAuthenticated && <SOSButton />}
+      {isAuthenticated && <VoiceAssistant open={voiceOpen} onClose={() => setVoiceOpen(false)} />}
+    </BrowserRouter>
   );
 }

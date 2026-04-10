@@ -14,15 +14,13 @@ const signup = async (req, res, next) => {
       return sendError(res, 409, "An account with this email or phone already exists.");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-
     const user = await User.create({
       name,
       age,
       role: role || "elder",
       phone,
       email,
-      password: hashedPassword,
+      password,
       emergencyContacts: emergencyContacts || [],
     });
 
@@ -60,7 +58,7 @@ const login = async (req, res, next) => {
       return sendError(res, 403, "Your account has been deactivated.");
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return sendError(res, 401, "Invalid email or password.");
     }
