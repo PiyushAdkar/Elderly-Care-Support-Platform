@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+const content = `import React, { useState, useEffect } from 'react';
 import { Users, Plus, PhoneCall, Edit, Trash2, X, Star, Loader2 } from 'lucide-react';
 import { getContacts, addContact, updateContact, deleteContact } from '../api/contactService';
 
@@ -181,7 +182,7 @@ export default function ContactsPage() {
             <p className="text-slate-500 max-w-sm mb-6">
               {filterType === 'All' 
                 ? "You haven't added anyone to your care circle yet."
-                : `You don't have any contacts listed under "${filterType}".`}
+                : \`You don't have any contacts listed under "\${filterType}".\`}
             </p>
             {filterType === 'All' && (
               <button 
@@ -221,7 +222,7 @@ export default function ContactsPage() {
                 {/* Bottom Row: Actions */}
                 <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                   <a 
-                    href={`tel:${contact.phone}`}
+                    href={\`tel:\${contact.phone}\`}
                     className="bg-emerald-500 hover:bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm transition-colors"
                     title="Call"
                   >
@@ -378,4 +379,7 @@ export default function ContactsPage() {
     </div>
   );
 }
+\`;
 
+fs.writeFileSync('C:\\\\Users\\\\PIYUSH\\\\CEP\\\\Elderly-Care-Support-Platform\\\\frontend\\\\src\\\\pages\\\\ContactsPage.jsx', content);
+console.log('File successfully updated!');

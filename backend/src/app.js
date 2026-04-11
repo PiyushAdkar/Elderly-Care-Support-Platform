@@ -40,8 +40,8 @@ app.use(
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000"),   // 15 min
-  max:      parseInt(process.env.RATE_LIMIT_MAX       || "100"),
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000"), // 15 min
+  max: process.env.NODE_ENV === 'development' ? 1000 : parseInt(process.env.RATE_LIMIT_MAX || "100"), // Relaxed for development
   standardHeaders: true,
   legacyHeaders: false,
   handler: (_req, res) => sendError(res, 429, "Too many requests. Please try again later."),
