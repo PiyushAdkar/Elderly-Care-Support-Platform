@@ -21,12 +21,20 @@ export default function ContactsPage() {
     name: '',
     phone: '',
     email: '',
-    type: 'Family',
+    relation: '',
+    type: 'family',
     isPrimary: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const contactTypes = ['Family', 'Doctor', 'Emergency', 'Other'];
+  const contactTypes = ['family', 'doctor', 'caretaker', 'neighbor', 'other'];
+  const typeLabels = {
+    'family': 'Family',
+    'doctor': 'Doctor',
+    'caretaker': 'Caretaker',
+    'neighbor': 'Neighbor',
+    'other': 'Other'
+  };
 
   const fetchContacts = async () => {
     setIsLoading(true);
@@ -62,8 +70,8 @@ export default function ContactsPage() {
       resetForm();
       fetchContacts();
     } catch (err) {
-      console.error('Error saving contact:', err);
-      alert(err.response?.data?.message || 'Failed to save contact.');
+      console.error('Contact Validation Error:', err.response?.data || err.message);
+      alert(JSON.stringify(err.response?.data?.message || 'Check console for field errors'));
     } finally {
       setIsSubmitting(false);
     }
@@ -95,7 +103,8 @@ export default function ContactsPage() {
       name: contact.name || '',
       phone: contact.phone || '',
       email: contact.email || '',
-      type: contact.type || 'Family',
+      relation: contact.relation || '',
+      type: contact.type || 'family',
       isPrimary: !!contact.isPrimary
     });
     setIsFormModalOpen(true);
@@ -112,7 +121,8 @@ export default function ContactsPage() {
       name: '',
       phone: '',
       email: '',
-      type: 'Family',
+      relation: '',
+      type: 'family',
       isPrimary: false
     });
   };
@@ -153,7 +163,7 @@ export default function ContactsPage() {
                   : "px-4 py-2 rounded-full font-medium text-sm transition-colors bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
               }
             >
-              {cat}
+              {cat === 'All' ? 'All' : typeLabels[cat]}
             </button>
           ))}
         </div>
@@ -181,7 +191,7 @@ export default function ContactsPage() {
             <p className="text-slate-500 max-w-sm mb-6">
               {filterType === 'All' 
                 ? "You haven't added anyone to your care circle yet."
-                : `You don't have any contacts listed under "${filterType}".`}
+                : `You don't have any contacts listed under "${typeLabels[filterType]}".`}
             </p>
             {filterType === 'All' && (
               <button 
@@ -213,7 +223,7 @@ export default function ContactsPage() {
                     </div>
                     <p className="text-blue-600 font-semibold mt-1">{contact.phone}</p>
                     <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md inline-block mt-2">
-                      {contact.type || 'Other'}
+                      {typeLabels[contact.type] || 'Other'} {contact.relation ? `• ${contact.relation}` : ''}
                     </span>
                   </div>
                 </div>
@@ -304,15 +314,28 @@ export default function ContactsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Relation / Type *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Contact Category *</label>
                 <select 
                   value={formData.type} 
                   onChange={e => setFormData({...formData, type: e.target.value})}
                   className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0B1C3F] appearance-none bg-white" 
                   required
                 >
-                  {contactTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                  <option value="" disabled>Select a category</option>
+                  {contactTypes.map(t => <option key={t} value={t}>{typeLabels[t]}</option>)}
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Specific Relation *</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Son, Cardiologist, Next-door neighbor"
+                  value={formData.relation} 
+                  onChange={e => setFormData({...formData, relation: e.target.value})}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0B1C3F]" 
+                  required 
+                />
               </div>
               
               <div className="flex items-center gap-3 pt-3 pb-1 border-t border-slate-100 mt-2">
