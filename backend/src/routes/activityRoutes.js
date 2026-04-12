@@ -14,7 +14,7 @@ const validate = require("../middleware/validate");
 router.use(protect);
 
 router.get("/today",            getTodayActivity);
-router.get("/summary/weekly",   getWeeklySummary);
+router.get("/weekly",           getWeeklySummary);
 router.get("/",                 getActivities);
 
 router.post(

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Pill, Calendar, Activity, Clock, HeartPulse, Bell, CheckCircle, Loader2 } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { 
   getTodayMedicines, 
   getUpcomingAppointments, 
@@ -10,6 +10,7 @@ import {
   logActivity,
   markMedicineTaken
 } from '../api/dashboardService';
+import { getTodayActivity, getWeeklySummary } from '../api/activityService';
 
 export default function DashboardPage() {
   const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -21,6 +22,9 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [todaySteps, setTodaySteps] = useState(0);
+  const [heartRateData, setHeartRateData] = useState([]);
+
   const [isApptModalOpen, setIsApptModalOpen] = useState(false);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
 
@@ -31,17 +35,48 @@ export default function DashboardPage() {
     if (showLoading) setIsLoading(true);
     setError(null);
     try {
-      const [medRes, apptRes, activityRes, updatesRes] = await Promise.allSettled([
+      // First, get standard dashboard data
+      const [medRes, apptRes, updatesRes] = await Promise.allSettled([
         getTodayMedicines(),
         getUpcomingAppointments(),
-        getWeeklyActivity(),
         getRecentUpdates()
       ]);
 
       if (medRes.status === 'fulfilled') setMedicines(medRes.value?.data || medRes.value || []);
       if (apptRes.status === 'fulfilled') setAppointments(apptRes.value?.data || apptRes.value || []);
-      if (activityRes.status === 'fulfilled') setWeeklyActivity(activityRes.value?.data || activityRes.value || []);
       if (updatesRes.status === 'fulfilled') setRecentUpdates(updatesRes.value?.data || updatesRes.value || []);
+
+      // Then, get explicit activity tracking data (with swallow-404 logic)
+      let currentStepsVal = 0;
+      let weeklyHeartVal = [];
+      
+      try {
+        const todayRes = await getTodayActivity();
+        currentStepsVal = todayRes.data?.steps || 0;
+      } catch (err) {
+        if (err?.response?.status !== 404) {
+          console.error('Failed to get today activity for dashboard:', err);
+        }
+      }
+
+      try {
+        const weeklyRes = await getWeeklySummary();
+        const records = weeklyRes.data || [];
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        weeklyHeartVal = records.map(record => {
+          const d = new Date(record.date);
+          return {
+            name: days[d.getDay()],
+            bpm: record.heartRateAvg || 0
+          };
+        });
+        setHeartRateData(weeklyHeartVal);
+      } catch (err) {
+        console.error('Failed to get weekly activity for dashboard:', err);
+      }
+
+      setTodaySteps(currentStepsVal);
+
     } catch (err) {
       setError(err.message || 'Failed to load dashboard data');
     } finally {
@@ -105,9 +140,8 @@ export default function DashboardPage() {
   };
 
   // Safe fallback to match the hardcoded steps fix requirement
-  const activities = weeklyActivity && weeklyActivity.length > 0 ? weeklyActivity[weeklyActivity.length - 1] : null;
-  const currentSteps = activities?.steps || 0;
-  const stepGoal = activities?.stepGoal || 5000;
+  const currentSteps = todaySteps || 0;
+  const stepGoal = 5000; // Hardcoded goal for now or can be made dynamic
   const stepPercentage = Math.min((currentSteps / stepGoal) * 100, 100);
 
   // Smart Queueing for Next Dose:
@@ -255,22 +289,16 @@ export default function DashboardPage() {
             
             <div className="h-[300px] w-full overflow-hidden">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={weeklyActivity || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorBpm" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0B1C3F" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#0B1C3F" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
+                <LineChart data={heartRateData || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13 }} dy={10} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13 }} dy={10} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13 }} />
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     itemStyle={{ color: '#0B1C3F', fontWeight: 'bold' }}
                   />
-                  <Area type="monotone" dataKey="bpm" stroke="#0B1C3F" strokeWidth={3} fillOpacity={1} fill="url(#colorBpm)" />
-                </AreaChart>
+                  <Line type="monotone" dataKey="bpm" stroke="#0B1C3F" strokeWidth={3} dot={{ fill: '#0B1C3F', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>

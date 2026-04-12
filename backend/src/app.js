@@ -96,7 +96,7 @@ app.use("/api/doctors",       (req, res, next) => {          // alias for /api/a
   req.url = "/doctors" + req.url;
   appointmentRoutes(req, res, next);
 });
-app.use("/api/activity",      activityRoutes);
+app.use("/api/activities",    activityRoutes);
 app.use("/api/documents",     documentRoutes);
 app.use("/api/entertainment", entertainmentRoutes);
 app.use("/api/voice-command", voiceRoutes);
