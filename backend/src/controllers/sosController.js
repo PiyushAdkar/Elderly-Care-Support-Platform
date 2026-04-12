@@ -62,6 +62,7 @@ const triggerSOS = async (req, res, next) => {
     return sendSuccess(res, 201, "SOS triggered. Emergency contacts have been notified.", {
       sosId: sosLog._id,
       notifiedCount: notifiedContacts.filter(Boolean).length,
+      notifiedContacts: notifiedContacts.filter(Boolean),
       timestamp: sosLog.timestamp,
     });
   } catch (err) {

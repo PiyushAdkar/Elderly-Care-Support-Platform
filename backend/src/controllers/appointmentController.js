@@ -5,7 +5,7 @@ const { sendSuccess, sendError } = require("../utils/apiResponse");
 // ─── Static doctor listing (replace with a real Doctor model if needed) ───────
 const MOCK_DOCTORS = [
   {
-    id: "doc_001",
+    id: "65f1a2b3c4d5e6f7a8b9c0d1",
     name: "Dr. Ananya Mehta",
     specialization: "Geriatrics",
     hospital: "Deenanath Mangeshkar Hospital, Pune",
@@ -15,7 +15,7 @@ const MOCK_DOCTORS = [
     rating: 4.8,
   },
   {
-    id: "doc_002",
+    id: "65f1a2b3c4d5e6f7a8b9c0d2",
     name: "Dr. Rajesh Kulkarni",
     specialization: "Cardiology",
     hospital: "Ruby Hall Clinic, Pune",
@@ -25,7 +25,7 @@ const MOCK_DOCTORS = [
     rating: 4.9,
   },
   {
-    id: "doc_003",
+    id: "65f1a2b3c4d5e6f7a8b9c0d3",
     name: "Dr. Sunita Verma",
     specialization: "Neurology",
     hospital: "Jehangir Hospital, Pune",
@@ -35,7 +35,7 @@ const MOCK_DOCTORS = [
     rating: 4.7,
   },
   {
-    id: "doc_004",
+    id: "65f1a2b3c4d5e6f7a8b9c0d4",
     name: "Dr. Pradeep Shah",
     specialization: "Orthopedics",
     hospital: "Sahyadri Hospital, Pune",
@@ -45,7 +45,7 @@ const MOCK_DOCTORS = [
     rating: 4.6,
   },
   {
-    id: "doc_005",
+    id: "65f1a2b3c4d5e6f7a8b9c0d5",
     name: "Dr. Kavita Desai",
     specialization: "General Physician",
     hospital: "KEM Hospital, Pune",
