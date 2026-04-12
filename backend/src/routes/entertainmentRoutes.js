@@ -5,12 +5,14 @@ const {
   getMusicCategories,
   getStoryCategories,
   getEntertainment,
+  searchArchiveMusic,
 } = require("../controllers/entertainmentController");
 const { protect } = require("../middleware/auth");
 
 router.use(protect);
 
 router.get("/",        getEntertainment);
+router.get("/search",  searchArchiveMusic);
 router.get("/music",   getMusicCategories);
 router.get("/stories", getStoryCategories);
 

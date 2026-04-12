@@ -1,4 +1,5 @@
-const { sendSuccess } = require("../utils/apiResponse");
+const { sendSuccess, sendError } = require("../utils/apiResponse");
+const axios = require("axios");
 
 const MUSIC_CATEGORIES = [
   {
@@ -117,4 +118,61 @@ const getEntertainment = (req, res) => {
   });
 };
 
-module.exports = { getMusicCategories, getStoryCategories, getEntertainment };
+// ─── Search Archive Music ───────────────────────────────────────────────────
+const searchArchiveMusic = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q) {
+      return sendError(res, 400, "Search query is required.");
+    }
+
+    const searchUrl = "https://archive.org/advancedsearch.php";
+    const searchResponse = await axios.get(searchUrl, {
+      params: {
+        q: `title:(${q}) AND mediatype:(audio)`,
+        "fl[]": ["identifier", "title", "creator"],
+        "sort[]": "downloads desc",
+        rows: 5,
+        output: "json",
+      },
+    });
+
+    const docs = searchResponse.data?.response?.docs || [];
+    if (docs.length === 0) {
+      return sendSuccess(res, 200, "No results found.", []);
+    }
+
+    const trackPromises = docs.map(async (doc) => {
+      try {
+        const metaResponse = await axios.get(`https://archive.org/metadata/${doc.identifier}`);
+        const files = metaResponse.data?.files || [];
+        const mp3File = files.find((f) => f.name && f.name.endsWith(".mp3"));
+        
+        if (mp3File) {
+          return {
+            title: doc.title || "Unknown Title",
+            artist: doc.creator || "Unknown Artist",
+            url: `https://archive.org/download/${doc.identifier}/${mp3File.name}`,
+            duration: mp3File.length || 0,
+            identifier: doc.identifier,
+          };
+        }
+        return null;
+      } catch (err) {
+        console.error(`Error fetching metadata for ${doc.identifier}:`, err.message);
+        return null;
+      }
+    });
+
+    let tracks = await Promise.all(trackPromises);
+    // Remove nulls where no MP3 map was found
+    tracks = tracks.filter((t) => t !== null);
+
+    return sendSuccess(res, 200, "Search results fetched successfully.", tracks);
+  } catch (error) {
+    console.error("Search Archive Music Error:", error);
+    return sendError(res, 500, "Failed to search music.");
+  }
+};
+
+module.exports = { getMusicCategories, getStoryCategories, getEntertainment, searchArchiveMusic };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getEntertainment } from '../api/entertainmentService';
+import { getEntertainment, searchMusic } from '../api/entertainmentService';
 
 export default function EntertainmentPage() {
   const [activeTab, setActiveTab] = useState('music');
@@ -8,6 +8,30 @@ export default function EntertainmentPage() {
   const [error, setError] = useState(null);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [trackDuration, setTrackDuration] = useState(0);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      setHasSearched(false);
+      setSearchResults([]);
+      return;
+    }
+    try {
+      setIsSearching(true);
+      const res = await searchMusic(searchQuery);
+      setSearchResults(res.data || []);
+      setHasSearched(true);
+    } catch (err) {
+      console.error('Search error:', err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const formatTime = (time) => {
     if (time && !isNaN(time)) {
@@ -83,6 +107,71 @@ export default function EntertainmentPage() {
         </div>
 
         {/* Content Area */}
+        {activeTab === 'music' && (
+          <div className="mb-8">
+            <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl mb-8">
+              <input 
+                type="text" 
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (!e.target.value.trim()) {
+                    setHasSearched(false);
+                    setSearchResults([]);
+                  }
+                }}
+                placeholder="Search Internet Archive for music..." 
+                className="flex-1 px-4 py-3 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#0B1C3F] shadow-sm"
+              />
+              <button 
+                type="submit" 
+                disabled={isSearching}
+                className="px-6 py-3 bg-[#0B1C3F] text-white rounded-full font-medium hover:bg-blue-900 transition-colors shadow-sm disabled:opacity-70"
+              >
+                {isSearching ? 'Searching...' : 'Search'}
+              </button>
+            </form>
+            
+            {hasSearched && !isSearching && searchResults.length === 0 && (
+              <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-12 text-center mb-8">
+                <span className="text-6xl text-slate-300">🔍</span>
+                <h3 className="text-xl font-bold text-[#0B1C3F] mt-4">No results found</h3>
+                <p className="text-slate-500 mt-2">
+                  We couldn't find any audio for "{searchQuery}". Try searching for classic artists like "Lata Mangeshkar" or "Kishore Kumar".
+                </p>
+              </div>
+            )}
+
+            {searchResults.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-2xl font-bold text-[#0B1C3F] mb-4">Search Results</h2>
+                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {searchResults.map((track, idx) => (
+                      <div key={track.identifier || track.url || idx} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors border border-slate-100">
+                        <div className="flex flex-col max-w-[80%]">
+                          <span className="font-medium text-slate-800 truncate">{track.title}</span>
+                          <span className="text-xs text-slate-500 truncate">{track.artist}</span>
+                        </div>
+                        <button
+                          onClick={() => setCurrentTrack(track)}
+                          className="text-blue-600 hover:bg-blue-100 p-2 rounded-full transition-colors flex items-center justify-center shrink-0"
+                          title="Play"
+                        >
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            <h2 className="text-2xl font-bold text-[#0B1C3F] mb-4">Curated Playlists</h2>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {activeTab === 'music' &&
             data.music.map((category, index) => (
