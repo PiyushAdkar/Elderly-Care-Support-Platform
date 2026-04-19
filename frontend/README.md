@@ -1,4 +1,4 @@
-# 🌿 ElderCare AI — Elder Companion Platform
+# 🌿 Elderly Care — Elder Companion Platform
 
 A complete, accessible React.js + Tailwind CSS platform designed for elderly users.
 

@@ -29,9 +29,9 @@ app.use(helmet());
 // ── CORS ──────────────────────────────────────────────────────────────────────
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(",")
-      : "*",
+    // TODO: Change this origin to your specific Vercel domain once the frontend is live for better security
+    // e.g., origin: 'https://my-elder-companion-frontend.vercel.app'
+    origin: '*',
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,

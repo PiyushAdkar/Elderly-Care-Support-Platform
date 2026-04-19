@@ -33,7 +33,7 @@ export default function Layout({ onVoice }) {
           <div className="flex items-center flex-shrink-0">
             <div className="text-xl font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span className="text-2xl">🌿</span>
-              <span className="hidden sm:block">ElderCare AI</span>
+              <span className="hidden sm:block">Elderly Care</span>
             </div>
           </div>
 
