@@ -5,6 +5,7 @@ import Navbar          from './components/Navbar';
 import HomePage        from './pages/HomePage';
 import LoginPage       from './pages/LoginPage';
 import SignupPage      from './pages/SignupPage';
+import About           from './pages/About';
 import DashboardPage   from './pages/DashboardPage';
 import MedicinePage    from './pages/MedicinePage';
 import TelemedicinePage from './pages/TelemedicinePage';
@@ -28,6 +29,7 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/"       element={<><Navbar /><HomePage /></>} />
+        <Route path="/about"  element={<><Navbar /><About /></>} />
         <Route path="/login"  element={<><Navbar /><LoginPage /></>} />
         <Route path="/signup" element={<><Navbar /><SignupPage /></>} />
 
