@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { UserPlus, Sliders, ShieldCheck } from 'lucide-react';
 
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
@@ -27,7 +28,7 @@ export default function HomePage() {
     <motion.div style={{ backgroundColor }} className="min-h-screen">
       {/* 1. The Deep Blue Hero Section */}
       <section className="bg-[#0B1C3F] w-full relative overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-8 md:px-16 py-24 relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-8 md:px-16 pt-24 pb-48 relative z-10">
           {/* Left Column (Text) */}
           <div className="flex flex-col gap-6 text-left w-full">
             <motion.h1 
@@ -85,8 +86,8 @@ export default function HomePage() {
       </section>
 
       {/* 2. The Overlapping White Info Card */}
-      <div className="max-w-5xl mx-6 md:mx-16 lg:mx-32 xl:mx-auto -mt-16 relative z-10 bg-white rounded-3xl shadow-xl p-10 text-center mb-24">
-        <h2 className="text-[#0B1C3F] text-2xl md:text-3xl font-bold mb-6">
+      <div className="relative z-20 -mt-24 md:-mt-32 mx-4 md:mx-auto max-w-5xl bg-white rounded-3xl shadow-xl p-10 md:p-16 text-center">
+        <h2 className="text-[#0B1C3F] text-2xl md:text-3xl font-bold mb-10">
           We are National Leaders in Specialized Medical Support
         </h2>
         <div className="flex flex-wrap justify-center items-center gap-3">
@@ -104,6 +105,43 @@ export default function HomePage() {
           </button>
         </div>
       </div>
+
+      {/* How It Works Section */}
+      <section className="pt-32 pb-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-8 md:px-16">
+          <h2 className="text-4xl font-bold text-center text-[#0B1C3F] mb-16">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            
+            {/* Step 1 */}
+            <div className="flex flex-col items-center text-center">
+              <UserPlus size={48} className="text-[#0B1C3F]" />
+              <h3 className="text-xl font-bold mt-6 mb-3 text-[#0B1C3F]">1. Create an Account</h3>
+              <p className="text-gray-600">
+                Sign up securely in minutes and set up your personalized caregiver or patient profile.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center">
+              <Sliders size={48} className="text-[#0B1C3F]" />
+              <h3 className="text-xl font-bold mt-6 mb-3 text-[#0B1C3F]">2. Customize Alerts</h3>
+              <p className="text-gray-600">
+                Easily input medication schedules, upcoming appointments, and trusted emergency contacts.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center">
+              <ShieldCheck size={48} className="text-[#0B1C3F]" />
+              <h3 className="text-xl font-bold mt-6 mb-3 text-[#0B1C3F]">3. Peace of Mind</h3>
+              <p className="text-gray-600">
+                Enjoy automated reminders and 24/7 instant SOS alerts to keep your loved ones safe.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
 
       {/* 3. Footer */}
       <footer className="w-full bg-[#0B1C3F] text-white py-20 px-8">
