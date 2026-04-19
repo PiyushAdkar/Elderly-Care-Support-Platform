@@ -46,12 +46,24 @@ export default function About() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
       {/* 1. Hero Section */}
-      <section className="w-full bg-gradient-to-b from-blue-50 to-white min-h-[60vh] flex flex-col justify-center items-center text-center py-20 px-8">
+      <section className="relative w-full bg-gradient-to-b from-blue-50 to-white min-h-[60vh] flex flex-col justify-center items-center text-center py-20 px-8 overflow-hidden">
+        {/* Background decorative lines */}
+        <svg
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 text-blue-300 opacity-20"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <path fill="none" stroke="currentColor" strokeWidth="2" d="M0,160 C320,300,420,0,740,120 C1060,240,1200,60,1440,100" />
+          <path fill="none" stroke="currentColor" strokeWidth="2" d="M0,200 C280,350,560,50,840,160 C1120,270,1280,100,1440,140" />
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M0,240 C350,400,600,100,900,200 C1200,300,1300,150,1440,180" />
+        </svg>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-4xl mx-auto"
+          className="relative z-10 max-w-4xl mx-auto"
         >
           <h1 className="text-5xl md:text-7xl font-extrabold text-[#0B1C3F] tracking-tight leading-tight mb-8">
             Compassionate Care for a <br className="hidden md:block" /> Digital Age
@@ -104,8 +116,8 @@ export default function About() {
                 </div>
                 
                 {/* Image Side */}
-                <div className="flex-1 w-full">
-                  <div className={`w-full h-[400px] md:h-[500px] ${feature.bgColor} rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden group`}>
+                <div className="flex-1 w-full flex justify-center">
+                  <div className={`w-full max-w-lg h-56 md:h-64 lg:h-72 ${feature.bgColor} rounded-md shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center overflow-hidden group`}>
                     <img 
                       src={feature.image} 
                       alt={feature.alt || feature.title} 
