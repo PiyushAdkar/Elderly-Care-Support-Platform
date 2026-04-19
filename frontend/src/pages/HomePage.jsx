@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function HomePage() {
@@ -10,41 +9,6 @@ export default function HomePage() {
     [0, 1],
     ['#f8fafc', '#eff6ff'] // slate-50 to blue-50
   );
-
-  const features = [
-    {
-      title: "Medicine Tracking",
-      kicker: "Medication",
-      desc: "Ensure peace of mind with our intelligent medication reminder system. Never miss a dose with timely alerts designed specifically for ease of use.",
-      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80",
-      bullets: ["Customizable alert schedules", "Clear dosage instructions", "Refill notifications"],
-      flip: false
-    },
-    {
-      title: "Telemedicine Appointments",
-      kicker: "Virtual Doctor",
-      desc: "Connect face-to-face with healthcare professionals without leaving the comfort of your home. A simple, secure platform for video consultations.",
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80",
-      bullets: ["Secure high-definition video calls", "Easy scheduling & calendar syncing", "Post-visit consultation notes"],
-      flip: true
-    },
-    {
-      title: "24/7 Emergency SOS",
-      kicker: "Safety First",
-      desc: "Immediate assistance is always just one tap away, providing safety for seniors and reassurance for family members everywhere.",
-      image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&w=800&q=80",
-      bullets: ["One-touch alert system", "GPS location sharing", "Direct line to local emergency contacts"],
-      flip: false
-    },
-    {
-      title: "Activity & Health Monitoring",
-      kicker: "Wellness",
-      desc: "Keep a steady watch over daily physical activities and vitals to maintain a healthy, active, and fully engaged lifestyle.",
-      image: "https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&w=800&q=80",
-      bullets: ["Daily step & movement tracking", "Customizable fitness goals", "Weekly progress reports"],
-      flip: true
-    }
-  ];
 
   return (
     <motion.div style={{ backgroundColor }} className="min-h-screen">
@@ -87,7 +51,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. The Overlapping White Info Card */}
-      <div className="max-w-5xl mx-6 md:mx-16 lg:mx-32 xl:mx-auto -mt-16 relative z-10 bg-white rounded-3xl shadow-xl p-10 text-center">
+      <div className="max-w-5xl mx-6 md:mx-16 lg:mx-32 xl:mx-auto -mt-16 relative z-10 bg-white rounded-3xl shadow-xl p-10 text-center mb-24">
         <h2 className="text-[#0B1C3F] text-2xl md:text-3xl font-bold mb-6">
           We are National Leaders in Specialized Medical Support
         </h2>
@@ -107,54 +71,18 @@ export default function HomePage() {
         </div>
       </div>
 
-      <main className="max-w-6xl mx-auto px-8 md:px-16 lg:px-24 mt-8">
-        {/* Features Zigzag Layout */}
-        <section className="pb-24 pt-8 space-y-24">
-          {features.map((feature, idx) => (
-            <motion.div 
-              key={idx} 
-              initial={{ opacity: 0, y: 50 }} 
-              whileInView={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.8, ease: "easeOut" }} 
-              viewport={{ once: true, amount: 0.2 }}
-              className={`flex flex-col ${feature.flip ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-12`}
-            >
-              {/* Image Side */}
-              <div className="flex-1 w-full">
-                <img 
-                  src={feature.image} 
-                  alt={feature.title} 
-                  className="w-full h-[400px] object-cover rounded-2xl shadow-[8px_8px_0px_0px_#0B1C3F] border border-slate-200"
-                />
-              </div>
-              
-              {/* Text Side */}
-              <div className="flex-1 w-full flex flex-col justify-center">
-                <span className="block text-[#0B1C3F] font-bold tracking-wider uppercase text-sm mb-2">
-                  {feature.kicker}
-                </span>
-                <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">{feature.title}</h2>
-                <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                  {feature.desc}
-                </p>
-                <ul className="space-y-3 mb-8">
-                  {feature.bullets.map((bullet, i) => (
-                    <li key={i} className="flex items-center gap-3 text-slate-700 font-medium mb-2">
-                      <CheckCircle className="text-[#0B1C3F] w-5 h-5 flex-shrink-0" />
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div>
-                  <a href="#" onClick={(e) => e.preventDefault()} className="inline-flex items-center text-[#0B1C3F] font-bold hover:text-blue-900 transition mt-4 group">
-                    Learn more about this feature <span aria-hidden="true" className="ml-1 group-hover:translate-x-1 transition-transform">&rarr;</span>
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </section>
-      </main>
+      {/* 3. Footer */}
+      <footer className="w-full bg-[#0B1C3F] text-white py-20 px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌿</span>
+            <span className="text-xl font-bold">Elderly Care</span>
+          </div>
+          <div className="text-sm text-blue-300">
+            &copy; {new Date().getFullYear()} Elderly Care. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </motion.div>
   );
 }
