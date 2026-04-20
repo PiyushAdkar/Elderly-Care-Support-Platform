@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import {
   LayoutDashboard, Pill, Video, Activity,
-  FolderOpen, Music, Users, LogOut, Menu, X
+  FolderOpen, Music, Users, LogOut, Menu, X, ChevronRight, ChevronLeft
 } from 'lucide-react';
 
 const navItems = [
@@ -20,8 +20,15 @@ export default function Layout() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const scrollContainerRef = useRef(null);
 
   const handleLogout = () => { logout(); navigate('/'); };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -35,10 +42,19 @@ export default function Layout() {
               <span className="text-2xl">🌿</span>
               <span className="hidden sm:block">Elderly Care</span>
             </div>
+            
+            <button 
+              type="button" 
+              onClick={() => scrollContainerRef.current?.scrollBy({ left: -200, behavior: 'smooth' })}
+              className="p-1 mx-2 text-white/70 hover:text-white rounded-full hover:bg-white/10 transition-colors flex-shrink-0 cursor-pointer hidden md:flex items-center justify-center"
+              title="Scroll Left"
+            >
+              <ChevronLeft size={20} />
+            </button>
           </div>
 
           {/* Center Section (Navigation Links) */}
-          <div className="hidden md:flex items-center md:gap-2 lg:gap-4 overflow-x-auto flex-nowrap scrollbar-hide mx-4">
+          <div ref={scrollContainerRef} className="hidden md:flex flex-1 items-center md:gap-2 lg:gap-4 overflow-x-auto scroll-smooth scrollbar-hide flex-nowrap mx-4">
             {navItems.map(({ to, icon: Icon, label }) => (
               <NavLink
                 key={to} to={to}
@@ -57,6 +73,16 @@ export default function Layout() {
 
           {/* Right Section (User Profile & Actions) */}
           <div className="flex items-center gap-4 flex-shrink-0">
+            {/* Scroll Right Button */}
+            <button 
+              onClick={scrollRight} 
+              type="button"
+              className="p-2 mr-2 text-gray-400 hover:text-white hover:bg-[#1A2C5B] rounded-full transition-colors hidden md:flex items-center justify-center"
+              title="Scroll Navigation"
+            >
+              <ChevronRight size={20} />
+            </button>
+
             {/* User Badge */}
             <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-[#0B1C3F] bg-white px-3 py-1.5 rounded-lg border border-transparent">
               👋 <span>{user?.name || 'User'}</span>

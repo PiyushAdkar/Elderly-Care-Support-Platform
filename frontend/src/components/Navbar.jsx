@@ -11,6 +11,14 @@ export default function Navbar() {
     navigate('/');
   };
 
+  const handleNavClick = (e) => {
+    e.currentTarget.scrollIntoView({ 
+      behavior: 'smooth', 
+      inline: 'center', 
+      block: 'nearest' 
+    });
+  };
+
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-8 md:px-16 lg:px-24 py-2 flex justify-between items-center w-full">
@@ -22,20 +30,20 @@ export default function Navbar() {
       </div>
 
       {/* Center Links */}
-      <div className="flex-1 flex justify-center gap-8 hidden md:flex">
-        <Link to="/" className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors">
+      <div className="flex-1 flex justify-center gap-8 hidden md:flex overflow-x-auto scroll-smooth scrollbar-hide flex-nowrap whitespace-nowrap px-4 w-full">
+        <Link to="/" onClick={handleNavClick} className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors flex-shrink-0">
           Home
         </Link>
         {!isAuthenticated ? (
-          <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors">
+          <Link to="/about" onClick={handleNavClick} className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors flex-shrink-0">
             About
           </Link>
         ) : (
           <>
-            <Link to="/dashboard" className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors">
+            <Link to="/dashboard" onClick={handleNavClick} className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors flex-shrink-0">
               Dashboard
             </Link>
-            <Link to="/contacts" className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors">
+            <Link to="/contacts" onClick={handleNavClick} className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors flex-shrink-0">
               Contacts
             </Link>
           </>
@@ -43,7 +51,7 @@ export default function Navbar() {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 flex-shrink-0">
         {!isAuthenticated ? (
           <>
             <button 
