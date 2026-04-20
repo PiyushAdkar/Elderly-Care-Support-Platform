@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import Navbar          from './components/Navbar';
@@ -16,12 +16,10 @@ import ContactsPage    from './pages/ContactsPage';
 
 import Layout          from './components/Layout';
 import SOSButton       from './components/SOSButton';
-import VoiceAssistant  from './components/VoiceAssistant';
 
 import { AuthContext } from './context/AuthContext';
 
 export default function App() {
-  const [voiceOpen, setVoiceOpen] = useState(false);
   const { isAuthenticated, user } = useContext(AuthContext);
 
   return (
@@ -34,7 +32,7 @@ export default function App() {
         <Route path="/signup" element={<><Navbar /><SignupPage /></>} />
 
         {/* Protected — wrapped in Layout */}
-        <Route element={<Layout onVoice={() => setVoiceOpen(true)} />}>
+        <Route element={<Layout />}>
           <Route path="/dashboard"    element={isAuthenticated ? <DashboardPage />    : <Navigate to="/login" />} />
           <Route path="/medicine"     element={isAuthenticated ? <MedicinePage />     : <Navigate to="/login" />} />
           <Route path="/telemedicine" element={isAuthenticated ? <TelemedicinePage /> : <Navigate to="/login" />} />
@@ -47,7 +45,6 @@ export default function App() {
 
       {/* Global always-visible elements */}
       {isAuthenticated && <SOSButton />}
-      {isAuthenticated && <VoiceAssistant open={voiceOpen} onClose={() => setVoiceOpen(false)} />}
     </BrowserRouter>
   );
 }

@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import {
   LayoutDashboard, Pill, Video, Activity,
-  FolderOpen, Music, Users, Mic, LogOut, Menu, X
+  FolderOpen, Music, Users, LogOut, Menu, X
 } from 'lucide-react';
 
 const navItems = [
@@ -16,7 +16,7 @@ const navItems = [
   { to: '/contacts',      icon: Users,           label: 'Contacts'   },
 ];
 
-export default function Layout({ onVoice }) {
+export default function Layout() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -57,19 +57,9 @@ export default function Layout({ onVoice }) {
 
           {/* Right Section (User Profile & Actions) */}
           <div className="flex items-center gap-4 flex-shrink-0">
-            {/* Voice Assistant */}
-            <button
-              onClick={onVoice}
-              className="flex items-center gap-2 text-white hover:text-blue-200 font-medium transition-colors"
-              title="Voice Assistant"
-            >
-              <Mic size={20} />
-              <span className="hidden lg:block">Voice</span>
-            </button>
-
             {/* User Badge */}
             <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-[#0B1C3F] bg-white px-3 py-1.5 rounded-lg border border-transparent">
-              👋 <span>{user?.name || 'Ramesh'}</span>
+              👋 <span>{user?.name || 'User'}</span>
             </div>
 
             {/* Logout */}

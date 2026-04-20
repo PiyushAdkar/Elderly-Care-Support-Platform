@@ -21,8 +21,7 @@ elder-companion/
 │   ├── components/
 │   │   ├── Layout.jsx            ← Top navbar + page outlet
 │   │   ├── UI.jsx                ← Reusable components (Card, Badge, StatCard…)
-│   │   ├── SOSButton.jsx         ← Floating global SOS button
-│   │   └── VoiceAssistant.jsx    ← Voice assistant modal with mic animation
+│   │   └── SOSButton.jsx         ← Floating global SOS button
 │   │
 │   └── pages/
 │       ├── HomePage.jsx          ← Landing page with features

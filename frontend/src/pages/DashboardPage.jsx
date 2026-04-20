@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Pill, Calendar, Activity, Clock, HeartPulse, Bell, CheckCircle, Loader2 } from 'lucide-react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AuthContext } from '../context/AuthContext';
 import { 
   getTodayMedicines, 
   getUpcomingAppointments, 
@@ -13,6 +14,7 @@ import {
 import { getTodayActivity, getWeeklySummary } from '../api/activityService';
 
 export default function DashboardPage() {
+  const { user } = useContext(AuthContext);
   const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   const [medicines, setMedicines] = useState([]);
@@ -165,7 +167,7 @@ export default function DashboardPage() {
         
         {/* Welcome Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Good Morning, Ramesh</h1>
+          <h1 className="text-3xl font-bold text-slate-900">Good Morning, {user?.name || 'User'}</h1>
           <p className="mt-2 text-slate-500 font-medium">{currentDate}</p>
         </div>
 
