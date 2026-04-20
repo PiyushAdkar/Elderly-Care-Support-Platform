@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
     if (logout) logout();
@@ -34,7 +34,7 @@ export default function Navbar() {
         <Link to="/" onClick={handleNavClick} className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors flex-shrink-0">
           Home
         </Link>
-        {!isAuthenticated ? (
+        {!user ? (
           <Link to="/about" onClick={handleNavClick} className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors flex-shrink-0">
             About
           </Link>
@@ -52,7 +52,7 @@ export default function Navbar() {
 
       {/* Actions */}
       <div className="flex items-center gap-4 flex-shrink-0">
-        {!isAuthenticated ? (
+        {!user ? (
           <>
             <button 
               onClick={() => navigate('/login')}

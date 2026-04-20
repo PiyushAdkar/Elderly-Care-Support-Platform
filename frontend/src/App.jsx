@@ -44,7 +44,7 @@ export default function App() {
       </Routes>
 
       {/* Global always-visible elements */}
-      {isAuthenticated && <SOSButton />}
+      {user && isAuthenticated && <SOSButton />}
     </BrowserRouter>
   );
 }
