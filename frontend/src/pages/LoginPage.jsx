@@ -2,12 +2,14 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import client from '../api/client';
 import { AuthContext } from '../context/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,6 +17,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       setError('');
       const response = await client.post('/auth/login', formData);
@@ -34,6 +37,8 @@ export default function LoginPage() {
       } else {
         setError('Invalid email or password. Please try again.');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -86,9 +91,10 @@ export default function LoginPage() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors mt-4"
+            disabled={isLoading}
+            className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors mt-4 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Sign In
+            {isLoading ? <><Loader2 className="animate-spin mr-2 h-5 w-5 inline" /> Logging in...</> : 'Sign In'}
           </button>
         </form>
 
